@@ -1,0 +1,45 @@
+@startuml
+skinparam linetype ortho
+
+entity "User" as e01 {
+  *id : number <<generated>>
+  --
+  *login : string
+  *password : string
+  *first_name : string
+  *last_name : string
+  *phone : string
+  email : string
+}
+
+entity "Device" as e02 {
+  *id : number <<generated>>
+  --
+  *user_id : number <<FK>>
+  *status : string
+  *device_type : string
+}
+
+entity "Telemetry" as e03 {
+  *id : number <<generated>>
+  --
+  *device_id : number <<FK>>
+  *device_info : string
+  *timestamp : datetime
+}
+
+entity "Task" as e04 {
+  *id : number <<generated>>
+  --
+  *device_id : number <<FK>>
+  *enabled: boolean
+  *period : number
+  *last_run_timestamp : datetime
+}
+
+
+e01 ||..o{ e02
+e02 ||..o{ e03
+e02 ||..|| e04
+
+@enduml

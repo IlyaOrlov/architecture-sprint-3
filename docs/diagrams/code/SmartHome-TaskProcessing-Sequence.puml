@@ -1,0 +1,35 @@
+@startuml
+title SmartHome Task Processing Sequence Diagram
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Sequence.puml
+
+Container_Boundary(b, "Telemetry Collector")
+  Component(c1, "Task Processing Service", "Infinite tasks processing loop")
+  Component(c2, "Task Repository Layer", "Manages tasks access logic")
+Boundary_End()
+
+ContainerDb(c3, "Task Database", "PostgreSQL")
+Container(c4, "Telemetry Management", "Java, Spring")
+System_Ext(c5, "Smart home device", "Managed smart home device")
+
+SHOW_INDEX()
+
+loop Infinite loop
+
+Rel(c1, c2, "Fetches task entities to process")
+Rel(c2, c3, "select * from tasks where enabled = true", "JDBC")
+Rel(c3, c2, "Returns tasks with device info", "JDBC")
+Rel(c2, c1, "Returns tasks to iterate through")
+
+loop Iterating through tasks
+
+Rel(c1, c5, "Requests device telemetry data", "HTTPS/JSON")
+Rel(c5, c1, "Returns telemetry data", "HTTPS/JSON")
+Rel(c1, c4, "Provides device telemetry data", "HTTP/JSON")
+
+end loop
+
+end loop
+
+SHOW_LEGEND()
+@enduml

@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: device-management-deployment
+  labels:
+    app: device-management
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: device-management
+  template:
+    metadata:
+      labels:
+        app: device-management
+    spec:
+      containers:
+        - name: device-management
+          image: device-management:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://device-db-service:5432/device_db
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: device-management-config
+                  key: POSTGRES_USER
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: device-management-config
+                  key: POSTGRES_PASSWORD
+          ports:
+            - containerPort: 8080

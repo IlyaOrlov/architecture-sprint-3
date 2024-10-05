@@ -1,0 +1,140 @@
+openapi: 3.0.0
+info:
+  title: Telemetry Management API
+  description: API для управления телеметрией устройств умного дома
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: Local server
+
+paths:
+  /api/telemetry:
+    post:
+      summary: Добавить информацию о телеметрии устройства
+      tags:
+        - Telemetry
+      requestBody:
+        description: Данные телеметрии устройства
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                device_id:
+                  type: integer
+                  description: Идентификатор устройства, предоставившего телеметрию
+                device_info:
+                  type: object
+                  description: Информация о текущем состоянии устройства в формате JSON
+                  example:
+                    status: "ON"
+                    temperature: 23.5
+                timestamp:
+                  type: string
+                  format: date-time
+                  description: Метка времени сбора телеметрии
+                  example: "2024-09-30T12:45:00Z"
+      responses:
+        '201':
+          description: Телеметрия успешно добавлена
+        '400':
+          description: Некорректные данные
+
+  /api/telemetry/device/{device_id}/latest:
+    get:
+      summary: Получить текущую телеметрию устройства
+      tags:
+        - Telemetry
+      parameters:
+        - in: path
+          name: device_id
+          required: true
+          description: Идентификатор устройства
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Успешный запрос, возвращает текущую телеметрию устройства
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: Идентификатор записи о телеметрии
+                  device_id:
+                    type: integer
+                    description: Идентификатор устройства
+                  device_info:
+                    type: object
+                    description: Информация о текущем состоянии устройства в формате JSON
+                    example:
+                      status: "ON"
+                      temperature: 23.5
+                  timestamp:
+                    type: string
+                    format: date-time
+                    description: Метка времени сбора телеметрии
+                    example: "2024-09-30T12:45:00Z"
+        '404':
+          description: Телеметрия для устройства не найдена
+
+  /api/telemetry/device/{device_id}/history:
+    get:
+      summary: Получить телеметрию устройства за указанный период
+      tags:
+        - Telemetry
+      parameters:
+        - in: path
+          name: device_id
+          required: true
+          description: Идентификатор устройства
+          schema:
+            type: integer
+        - in: query
+          name: start
+          required: true
+          description: Начало периода
+          schema:
+            type: string
+            format: date-time
+            example: "2024-09-01T00:00:00Z"
+        - in: query
+          name: end
+          required: true
+          description: Конец периода
+          schema:
+            type: string
+            format: date-time
+            example: "2024-09-30T23:59:59Z"
+      responses:
+        '200':
+          description: Успешный запрос, возвращает телеметрию за указанный период
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: Идентификатор записи о телеметрии
+                    device_id:
+                      type: integer
+                      description: Идентификатор устройства
+                    device_info:
+                      type: object
+                      description: Информация о текущем состоянии устройства в формате JSON
+                      example:
+                        status: "OFF"
+                        temperature: 20.0
+                    timestamp:
+                      type: string
+                      format: date-time
+                      description: Метка времени сбора телеметрии
+                      example: "2024-09-15T15:30:00Z"
+        '404':
+          description: Телеметрия для устройства не найдена

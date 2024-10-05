@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS devices (
+    id BIGSERIAL PRIMARY KEY,
+    user_id INT NOT NULL,
+    device_type VARCHAR(50) NOT NULL,
+    status VARCHAR(10) NOT NULL
+);

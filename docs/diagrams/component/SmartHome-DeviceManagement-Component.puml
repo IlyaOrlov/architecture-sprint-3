@@ -1,0 +1,30 @@
+@startuml
+title SmartHome Device Management Component Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Container_Boundary(SmartHome, "SmartHome System") {
+  Container(DeviceManagement, "Device Management", "Java, Spring", "Allows users to manage devices")
+  ContainerDb(DeviceDatabase, "Device Database", "PostgreSQL", "Stores devices data")
+}
+
+Container(DeviceManagement, "Device Management", "Java, Spring", "Allows users to manage devices") {
+  Component(UserCommandsController, "User Commands Controller", "Handles user device management requests")
+  Component(TelemetryDataController, "Telemetry Data Controller", "Handles telemetry to update devices data")
+  Component(DeviceServiceLayer, "Device Service Layer", "Manages devices state update logic")
+  Component(DeviceRepositoryLayer, "Device Repository Layer", "Manages devices data access logic")
+  Component(DeviceEntity, "Device Entity", "Represents device data")
+  Component(DeviceDTO, "Device DTO", "Represents device data for transfer")
+}
+
+Rel(UserCommandsController, DeviceServiceLayer, "Calls devices state update logic")
+Rel(TelemetryDataController, DeviceServiceLayer, "Calls devices data update logic")
+Rel(DeviceServiceLayer, DeviceRepositoryLayer, "Fetch/save device entity")
+Rel(DeviceRepositoryLayer, DeviceEntity, "Returns device entity")
+Rel(DeviceEntity, DeviceRepositoryLayer, "Persists device entity changes")
+Rel(DeviceRepositoryLayer, DeviceDatabase, "Executes SQL queries")
+Rel(DeviceServiceLayer, DeviceDTO, "Returns device DTO")
+
+@enduml

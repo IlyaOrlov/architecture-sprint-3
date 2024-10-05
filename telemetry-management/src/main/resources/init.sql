@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS telemetry (
+    id BIGSERIAL PRIMARY KEY,
+    device_id BIGINT NOT NULL,
+    device_info JSONB NOT NULL,
+    timestamp TIMESTAMP WITH TIME ZONE NOT NULL
+);
