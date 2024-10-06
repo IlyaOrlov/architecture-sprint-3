@@ -9,7 +9,7 @@ Person(user, "User", "A user of the SmartHome system")
 System(SmartHome, "SmartHome system", "System manging smart home devices")
 
 Container_Boundary(SmartHome, "SmartHome system") {
-  Container(ApiGateway, "API Gateway", "Kusk Gateway", "Handles user requests")
+  Container(ApiGateway, "API Gateway", "Nginx", "Handles user requests")
   Container(UserManagement, "User Management", "Keycloak", "Provides authentication and authorization")
   Container(DeviceManagement, "Device Management", "Java, Spring", "Allows users to manage devices")
   Container(TelemetryCollector, "Telemetry Collector", "Java, Spring", "Process telemetry collection tasks")
