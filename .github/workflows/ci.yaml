@@ -26,6 +26,7 @@ jobs:
         run: cd telemetry-management && mvn test
   
   build_and_push :
+    needs: test
     runs-on: ubuntu-latest
     steps:
       -
@@ -66,10 +67,11 @@ jobs:
           cache-to: type=gha,mode=max
   
   deploy:
+    needs: [test, build_and_push]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
-        uses: actions/checkout@main
+        uses: actions/checkout@v4
 
       - name: Setup K8s cluster
         uses: hiberbee/github-action-minikube@1.5.0
@@ -77,5 +79,4 @@ jobs:
       - name: Install release
         uses: hiberbee/github-action-helm@latest
         with:
-          context: charts
-          helm: upgrade --install smart-home-microservices smart-home-microservices
+          helm: upgrade --install smart-home-microservices charts/smart-home-microservices
