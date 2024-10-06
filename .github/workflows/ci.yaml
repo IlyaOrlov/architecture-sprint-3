@@ -12,8 +12,10 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       - name: Test device-management
+        shell: bash
         run: cd device-management && mvn test
       - name: Test telemetry-management
+        shell: bash
         run: cd telemetry-management && mvn test
   
   build_and_push :
