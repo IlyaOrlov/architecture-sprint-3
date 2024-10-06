@@ -70,7 +70,7 @@ class DeviceControllerTest {
 
     @Test
     void getDevice_ShouldReturnDevice() throws Exception {
-        DeviceDto device = deviceService.createDevice(regDeviceDto.getUserId(), regDeviceDto.getDeviceType());
+        DeviceDto device = deviceService.createDevice(regDeviceDto.getUserId(),regDeviceDto.getDeviceType());
 
         mockMvc.perform(get("/api/devices/{id}", device.getId()))
                 .andExpect(status().is(OK.value()))
