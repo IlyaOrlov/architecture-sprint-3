@@ -633,8 +633,8 @@ API микросервисов описаны в формате OpenAPI:
 #### 3. Разработка API
 
 [Спецификацию OpenAPI](#5-документирование-api) реализует компонент controller в каждом из микросервисов:
-* [DeviceController](device-management\src\main\java\ru\yandex\practicum\smarthome\controller\DeviceController.java)
-* [TelemetryController](telemetry-management\src\main\java\ru\yandex\practicum\smarthome\controller\TelemetryController.java)
+* [DeviceController](device-management/src/main/java/ru/yandex/practicum/smarthome/controller/DeviceController.java)
+* [TelemetryController](telemetry-management/src/main/java/ru/yandex/practicum/smarthome/controller/TelemetryController.java)
 
 #### 4. Реализация логики микросервисов
 
@@ -661,7 +661,7 @@ API микросервисов описаны в формате OpenAPI:
     minikube start
     ```
 
-2. Собрать Docker-образы микросервисов и загрузить в Minikube (если необходимо использовать локальные образы):
+2. Собрать Docker-образы микросервисов и загрузить в Minikube (если необходимо использовать локальные образы)
 
   * микросервис **device-management**
     ```bash
@@ -675,18 +675,18 @@ API микросервисов описаны в формате OpenAPI:
     docker build -t telemetry-management:latest .
     minikube image load telemetry-management:latest
     ```
-3. Развернуть микросервисы и API Gateway в кластере Kubernetes в Minikube.
+3. Развернуть микросервисы и API Gateway в кластере Kubernetes в Minikube
     ```bash
     cd k8s
     kubectl apply -f device-management
     kubectl apply -f telemetry-management
     kubectl apply -f api-gateway
     ```
-4. Получить доступ к микросервисам внутри Minikube через API Gateway.
+4. Получить доступ к микросервисам внутри Minikube через API Gateway
     ```bash
     minikube service nginx-gateway-service
     ```
-5. Остановить Minikube для завершения работы.
+5. Остановить Minikube для завершения работы
     ```bash
     minikube stop
     ```
@@ -706,7 +706,7 @@ API микросервисов описаны в формате OpenAPI:
   - ✔️ **Порт привязки (Port Binding).** Каждый микросервис может принимать запросы на порт, который можно задать в конфигурации при развёртывании.
   - ✔️ **Конкурентные процессы (Concurrency).** Использование Helm-чартов и API Gateway позволяет легко масштабировать приложение.
   - ✔️ **Утилизируемость (Disposability).** Использование Helm-чартов и API Gateway позволяет легко перезапускать как отдельные микросервисы, так и всё приложение целиком.
-  - ✔️ **Среды разработки и эксплуатации (Dev/Prod Parity).** Использование контейнеризации позволяет имитировать производственную среду при разработкеи тестировании.
+  - ✔️ **Среды разработки и эксплуатации (Dev/Prod Parity).** Использование контейнеризации позволяет имитировать производственную среду при разработке и тестировании.
   - ✔️ **Логи (Logs).** Микросервисы приложения пишут свои логи в stdout.
   - ✔️ **Административные процессы (Admin Processes).** Миграции БД (исключая создание исходных таблиц, если они ещё не существуют), задание секретов через переменные окружения запускаются как одноразовые процессы в той же среде, что и основное приложение.
 
@@ -720,10 +720,10 @@ API микросервисов описаны в формате OpenAPI:
 ❌ Спроектированная архитектура системы не требует использования Kafka.
 
 #### 3. Развертывание API Gateway.
-Приложение использует Nginx в качестве API Gateway. Для его развёртывания используется Helm chart [nginx-gateway](charts\nginx-gateway).
+Приложение использует Nginx в качестве API Gateway. Для его развёртывания используется Helm chart [nginx-gateway](charts/nginx-gateway).
 
 #### 4. Настройка API Gateway.
-Маршрутизация запросов от внешних клиентов к соответствующим микросервисам описана в [конфигурации Nginx для Helm chart](charts\nginx-gateway\templates\configmap.yaml).
+Маршрутизация запросов от внешних клиентов к соответствующим микросервисам описана в [конфигурации Nginx для Helm chart](charts/nginx-gateway/templates/configmap.yaml).
 
 #### 5. Интеграция микросервисов.
 Взаимодействие с микросервисами реализуется посредством REST API.
@@ -737,7 +737,7 @@ API микросервисов описаны в формате OpenAPI:
     minikube start
     ```
 
-2. Собрать Docker-образы микросервисов и загрузить в Minikube (если необходимо использовать локальные образы):
+2. Собрать Docker-образы микросервисов и загрузить в Minikube (если необходимо использовать локальные образы)
 
   * микросервис **device-management**
     ```bash
@@ -753,7 +753,7 @@ API микросервисов описаны в формате OpenAPI:
     ```
 Это необязательный шаг, т.к. образы микросервисов загружены в репозиторий ghcr.io/ilyaorlov/.
 
-3. Развернуть микросервисы и API Gateway в кластере Kubernetes в Minikube, используя Helm.
+3. Развернуть микросервисы и API Gateway в кластере Kubernetes в Minikube, используя Helm
     ```bash
     cd charts/smart-home-microservices
     helm dependency update
@@ -766,7 +766,7 @@ API микросервисов описаны в формате OpenAPI:
     helm install device-management .
     ```
 
-4. Получить доступ к микросервисам внутри Minikube через API Gateway можно двумя способами:
+4. Получить доступ к микросервисам внутри Minikube через API Gateway можно двумя способами
     * через minikube (будет предоставлен динамический порт)
     ```bash
     minikube service nginx-gateway
@@ -776,7 +776,7 @@ API микросервисов описаны в формате OpenAPI:
     kubectl --namespace default port-forward svc/nginx-gateway 8080:80
     ```
 
-5. Остановить Minikube для завершения работы.
+5. Остановить Minikube для завершения работы
     ```bash
     minikube stop
     ```
@@ -786,8 +786,8 @@ API микросервисов описаны в формате OpenAPI:
 ### Подзадание 3.1: Контейнеризация микросервисов
 
 #### 1. Создайте Dockerfile для каждого микросервиса
-* [device-management\Dockerfile](device-management\Dockerfile)
-* [telemetry-management\Dockerfile](telemetry-management\Dockerfile)
+* [device-management/Dockerfile](device-management/Dockerfile)
+* [telemetry-management/Dockerfile](telemetry-management/Dockerfile)
 
 #### 2. Создайте Dockerfile для фронтенда
 Реализация фронтенда не предусмотренная временными рамками текущего спринта.
@@ -824,7 +824,7 @@ helm install device-management .
 [Helm чарты](charts) созданы для для всех реализованных микросервисов и API Gateway.
 
 #### 2. Создайте CI/CD пайплайн для каждого микросервиса и фронтенда
-Шаги пайплайна Github Actions описаны в [ci.yaml](.github\workflows\ci.yaml)
+Шаги пайплайна Github Actions описаны в [ci.yaml](.github/workflows/ci.yaml)
 
 #### 3. Настройте триггеры для запуска пайплайнов
 Пайплайны настроены на запуск при каждом пуше кода в репозиторий.
