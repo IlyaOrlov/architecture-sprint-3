@@ -12,13 +12,9 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       - name: Test device-management
-        run: mvn test
-        with:
-          context: device-management
+        run: cd device-management && mvn test
       - name: Test telemetry-management
-        run: mvn test
-        with:
-          context: telemetry-management
+        run: cd telemetry-management && mvn test
   
   build_and_push :
     runs-on: ubuntu-latest
