@@ -831,4 +831,4 @@ helm install device-management .
 
 #### 4. Проверьте работу пайплайнов
 Пайплайн автоматически запускается и успешно выполняет все этапы (сборка, тестирование, развертывание). 
-Пример успешного пайплайна можно посмотреть [здесь](https://github.com/IlyaOrlov/architecture-sprint-3/actions/runs/11204182456).
+Выполненные пайплайны можно посмотреть [здесь](https://github.com/IlyaOrlov/architecture-sprint-3/actions).
