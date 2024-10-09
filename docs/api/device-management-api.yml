@@ -1,0 +1,198 @@
+openapi: 3.0.0
+info:
+  title: Device Management API
+  description: API для управления устройствами умного дома (включение/выключение, отправка команд).
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/
+    description: Локальный сервер
+
+paths:
+  /api/devices:
+    post:
+      summary: Зарегистрировать новое устройство
+      tags:
+        - Device Management
+      operationId: registerDevice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceRegistrationRequest'
+      responses:
+        '201':
+          description: Устройство успешно зарегистрировано.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+        '400':
+          description: Некорректные данные.
+    
+  /api/devices/{id}:
+    get:
+      summary: Получить информацию об устройстве
+      tags:
+        - Device Management
+      operationId: getDevice
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Информация об устройстве.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+        '404':
+          description: Устройство не найдено.
+
+  /api/devices/{id}/status:
+    put:
+      summary: Управлять состоянием устройства (включить/выключить)
+      tags:
+        - Device Management
+      operationId: updateDeviceStatus
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceStatusUpdateRequest'
+      responses:
+        '200':
+          description: Состояние устройства успешно обновлено.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+        '404':
+          description: Устройство не найдено.
+        '400':
+          description: Некорректный запрос.
+
+  /api/devices/{id}/commands:
+    post:
+      summary: Передать команду устройству
+      tags:
+        - Device Management
+      operationId: sendCommandToDevice
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceCommandRequest'
+      responses:
+        '200':
+          description: Команда успешно выполнена.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceCommandResponse'
+        '404':
+          description: Устройство не найдено.
+        '400':
+          description: Некорректные параметры команды.
+
+components:
+  schemas:
+    Device:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        user_id:
+          type: integer
+          description: Идентификатор пользователя, владеющего устройством.
+          example: 123
+        status:
+          type: string
+          description: Состояние устройства (ON/OFF).
+          example: "ON"
+        device_type:
+          type: string
+          description: Тип устройства.
+          example: "heating_system"
+      required:
+        - id
+        - user_id
+        - status
+        - device_type
+
+    DeviceRegistrationRequest:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          description: Идентификатор пользователя.
+          example: 123
+        device_type:
+          type: string
+          description: Тип устройства.
+          example: "heating_system"
+      required:
+        - user_id
+        - device_type
+
+    DeviceStatusUpdateRequest:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Новое состояние устройства (ON/OFF).
+          example: "OFF"
+      required:
+        - status
+
+    DeviceCommandRequest:
+      type: object
+      properties:
+        command:
+          type: string
+          description: Название команды.
+          example: "set_temperature"
+        parameters:
+          type: object
+          additionalProperties:
+            type: string
+          description: Параметры команды. Могут различаться в зависимости от команды.
+          example:
+            temperature: "22.5"
+      required:
+        - command
+        - parameters
+
+    DeviceCommandResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Уникальный идентификатор устройства.
+          example: 1
+        command:
+          type: string
+          description: Название выполненной команды.
+          example: "set_temperature"
+        status:
+          type: string
+          description: Статус выполнения команды.
+          example: "Command executed successfully"

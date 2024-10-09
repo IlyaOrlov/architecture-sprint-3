@@ -1,0 +1,89 @@
+version: '3.8'
+
+services:
+  # Device Management Database
+  device-db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: device_db
+      POSTGRES_USER: your_username
+      POSTGRES_PASSWORD: your_password
+    volumes:
+      - device-db-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  # Telemetry Management Database
+  telemetry-db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: telemetry_db
+      POSTGRES_USER: your_username
+      POSTGRES_PASSWORD: your_password
+    volumes:
+      - telemetry-db-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  # Device Management Service
+  device-management:
+    build: 
+      context: device-management
+      dockerfile: Dockerfile
+    # image: your-registry/device-management:latest
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://device-db:5432/device_db
+      SPRING_DATASOURCE_USERNAME: your_username
+      SPRING_DATASOURCE_PASSWORD: your_password
+    depends_on:
+      - device-db
+#    ports:
+#      - "8081:8080"
+    labels:
+      - "traefik.http.routers.device-management.rule=PathPrefix(`/api/devices`)"
+      - "traefik.http.services.device-management.loadbalancer.server.port=8080"
+    networks:
+      - app-network
+
+  # Telemetry Management Service
+  telemetry-management:
+    build: 
+      context: telemetry-management
+      dockerfile: Dockerfile
+#    image: your-registry/telemetry-management:latest
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://telemetry-db:5432/telemetry_db
+      SPRING_DATASOURCE_USERNAME: your_username
+      SPRING_DATASOURCE_PASSWORD: your_password
+    depends_on:
+      - telemetry-db
+#    ports:
+#      - "8082:8080"
+    labels:
+      - "traefik.http.routers.telemetry-management.rule=PathPrefix(`/api/telemetry`)"
+      - "traefik.http.services.telemetry-management.loadbalancer.server.port=8080"
+    networks:
+      - app-network
+
+  # Traefik
+  traefik:
+    image: traefik:v2.10
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "8080:80"  # HTTP
+      - "8081:8080" # Traefik Dashboard
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  device-db-data:
+  telemetry-db-data:

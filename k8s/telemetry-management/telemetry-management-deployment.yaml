@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: telemetry-management-deployment
+  labels:
+    app: telemetry-management
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: telemetry-management
+  template:
+    metadata:
+      labels:
+        app: telemetry-management
+    spec:
+      containers:
+        - name: telemetry-management
+          image: telemetry-management:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://telemetry-db-service:5432/telemetry_db
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: telemetry-management-config
+                  key: POSTGRES_USER
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: telemetry-management-config
+                  key: POSTGRES_PASSWORD
+          ports:
+            - containerPort: 8080

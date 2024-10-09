@@ -1,0 +1,30 @@
+@startuml
+title SmartHome Telemetry Management Component Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Container_Boundary(SmartHome, "SmartHome System") {
+  Container(TelemetryManagement, "Telemetry Management", "Java, Spring", "Provides telemetry data to users")
+  ContainerDb(TelemetryDatabase, "Telemetry Database", "PostgreSQL", "Stores telemetry data")
+}
+
+Container(TelemetryManagement, "Telemetry Management", "Java, Spring", "Provides telemetry data to users") {
+  Component(UserRequestsController, "User Requests Controller", "Handles user telemetry requests")
+  Component(TelemetryDataController, "Telemetry Data Controller", "Handles telemetry updates")
+  Component(TelemetryServiceLayer, "Telemetry Service Layer", "Manages telemetry processing logic")
+  Component(TelemetryRepositoryLayer, "Telemetry Repository Layer", "Manages telemetry data access logic")
+  Component(TelemetryEntity, "Telemetry Entity", "Represents telemetry data")
+  Component(TelemetryDTO, "Telemetry DTO", "Represents telemetry data for transfer")
+}
+
+Rel(UserRequestsController, TelemetryServiceLayer, "Calls telemetry fetch logic")
+Rel(TelemetryDataController, TelemetryServiceLayer, "Calls telemetry update logic")
+Rel(TelemetryServiceLayer, TelemetryRepositoryLayer, "Fetch/save telemetry entity")
+Rel(TelemetryRepositoryLayer, TelemetryEntity, "Returns telemetry entity")
+Rel(TelemetryEntity, TelemetryRepositoryLayer, "Persists new telemetry records")
+Rel(TelemetryRepositoryLayer, TelemetryDatabase, "Executes SQL queries")
+Rel(TelemetryServiceLayer, TelemetryDTO, "Returns telemetry DTO")
+
+@enduml

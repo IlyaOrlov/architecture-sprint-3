@@ -1,0 +1,12 @@
+dependencies:
+- name: device-management
+  repository: file://../device-management
+  version: 0.1.0
+- name: telemetry-management
+  repository: file://../telemetry-management
+  version: 0.1.0
+- name: nginx-gateway
+  repository: file://../nginx-gateway
+  version: 0.1.0
+digest: sha256:a000a3ce95678c7011271978801b839934818b4e7ca42878e5230d6601aa100d
+generated: "2024-10-06T19:25:33.4617994+03:00"

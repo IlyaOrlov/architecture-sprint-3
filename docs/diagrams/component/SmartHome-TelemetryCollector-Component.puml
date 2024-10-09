@@ -1,0 +1,30 @@
+@startuml
+title SmartHome Telemetry Collector Component Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Container_Boundary(SmartHome, "SmartHome System") {
+  Container(TelemetryCollector, "Telemetry Collector", "Java, Spring", "Process telemetry collection tasks")
+  ContainerDb(TaskDatabase, "Task Database", "PostgreSQL", "Stores telemetry collection tasks")
+}
+
+Container(TelemetryCollector, "Telemetry Collector", "Java, Spring", "Process telemetry collection tasks") {
+  Component(TasksController, "Tasks Controller", "Handles schedule/cancel task requests")
+  Component(TaskProcessingService, "Task Processing Service", "Infinite tasks processing loop")
+  Component(TaskManagementService, "Task Management Service", "Manages tasks")
+  Component(TaskRepositoryLayer, "Task Repository Layer", "Manages tasks access logic")
+  Component(TaskEntity, "Task Entity", "Represents task data")
+  Component(TelemetryDTO, "Telemetry DTO", "Represents telemetry data for transfer")
+}
+
+Rel(TasksController, TaskManagementService, "Schedule/cancel telemetry collection task")
+Rel(TaskManagementService, TaskRepositoryLayer, "Fetch/save task entity")
+Rel(TaskRepositoryLayer, TaskEntity, "Returns task entity")
+Rel(TaskEntity, TaskRepositoryLayer, "Persists task entity changes")
+Rel(TaskRepositoryLayer, TaskDatabase, "Executes SQL queries")
+Rel(TaskProcessingService, TaskRepositoryLayer, "Fetch/save task entities")
+Rel(TaskProcessingService, TelemetryDTO, "Returns telemetry DTO")
+
+@enduml

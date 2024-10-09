@@ -1,0 +1,38 @@
+@startuml
+title SmartHome Container Diagram
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Container.puml
+
+top to bottom direction
+
+Person(user, "User", "A user of the SmartHome system")
+System(SmartHome, "SmartHome system", "System manging smart home devices")
+
+Container_Boundary(SmartHome, "SmartHome system") {
+  Container(ApiGateway, "API Gateway", "Nginx", "Handles user requests")
+  Container(UserManagement, "User Management", "Keycloak", "Provides authentication and authorization")
+  Container(DeviceManagement, "Device Management", "Java, Spring", "Allows users to manage devices")
+  Container(TelemetryCollector, "Telemetry Collector", "Java, Spring", "Process telemetry collection tasks")
+  Container(TelemetryManagement, "Telemetry Management", "Java, Spring", "Provides telemetry data to users")
+  ContainerDb(UserDatabase, "User Database", "PostgreSQL", "Stores user data")
+  ContainerDb(DeviceDatabase, "Device Database", "PostgreSQL", "Stores devices data")
+  ContainerDb(TaskDatabase, "Task Database", "PostgreSQL", "Stores telemetry collection tasks")
+  ContainerDb(TelemetryDatabase, "Telemetry Database", "PostgreSQL", "Stores telemetry data")
+}
+
+System_Ext(device, "Smart home device", "Managed smart home device")
+
+Rel(user, ApiGateway, "Uses the system")
+Rel(ApiGateway, UserManagement, "Authorization requests")
+Rel(ApiGateway, DeviceManagement, "Device management requests")
+Rel(ApiGateway, TelemetryManagement, "Telemetry data requests")
+Rel(UserManagement, UserDatabase, "Reads\Writes user data")
+Rel(DeviceManagement, DeviceDatabase, "Reads/Writes device data")
+Rel(DeviceManagement, TelemetryCollector, "Schedules/Cancels telemetry collection task")
+Rel(TelemetryCollector, TaskDatabase, "Reads/Writes telemetry collection tasks")
+Rel(TelemetryCollector, device, "Collects telemetry data")
+Rel(TelemetryCollector, TelemetryManagement, "Provides telemetry data")
+Rel(TelemetryManagement, TelemetryDatabase, "Reads/Writes telemetry data")
+Rel(DeviceManagement, device, "Sends commands to device")
+
+@enduml

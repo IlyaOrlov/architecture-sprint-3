@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: telemetry-management-service
+spec:
+  selector:
+    app: telemetry-management
+  ports:
+    - protocol: TCP
+      port: 8082
+      targetPort: 8080

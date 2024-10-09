@@ -1,0 +1,14 @@
+device-management:
+  fullnameOverride: "device-management"
+  postgresql:
+    fullnameOverride: "device-management-postgresql"
+#  spring_datasource_url: jdbc:postgresql://smart-home-microservices-postgresql:5432/device_db
+
+telemetry-management:
+  fullnameOverride: "telemetry-management"
+  postgresql:
+    fullnameOverride: "telemetry-management-postgresql"
+#  spring_datasource_url: jdbc:postgresql://smart-home-microservices-postgresql:5432/device_db
+
+nginx-gateway:
+  fullnameOverride: "nginx-gateway"
